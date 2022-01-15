@@ -46,7 +46,7 @@ def bluetoothThread(q):
 #                 q.put(1)
 #             elif selection == 2:
 #                 pilImage = Image.open("2.png")
-#                 showPIL(pilImage)            
+#                 showPIL(pilImage)
 #             else:
 #                 pilImage = Image.open("3.jpeg")
 #                 showPIL(pilImage)
@@ -64,9 +64,9 @@ def getPilImage(selection):
     elif selection == 2:
         pilImage = Image.open(os.path.abspath("/home/pi/Desktop/redycler/rpi/assets/2.png"))
     elif selection == 3:
-        pilImage = Image.open(os.path.abspath("/home/pi/Desktop/redycler/rpi/assets/1.jpeg"))
+        pilImage = Image.open(os.path.abspath("/home/pi/Desktop/redycler/rpi/assets/3.jpeg"))
     return pilImage
-    
+
 
 queue = []
 
@@ -82,7 +82,7 @@ def processQueue(q, root):
     print("Found item:", selection)
     root.destroy()
     setupRoot(selection)
-    
+
 # Setup root for new image
 def setupRoot(selection):
     pilImage = getPilImage(selection)
@@ -92,7 +92,7 @@ def setupRoot(selection):
     root = tk.Tk()
     w, h = root.winfo_screenwidth(), root.winfo_screenheight()
     root.geometry("%dx%d+0+0" % (w, h))
-    root.focus_set()    
+    root.focus_set()
     root.bind("<Escape>", lambda e: root.destroy())
     canvas = tk.Canvas(root,width=w,height=h)
     canvas.pack()
@@ -102,7 +102,7 @@ def setupRoot(selection):
     imagesprite = canvas.create_image(0,0,image=image, anchor="nw")
     root.after(2000, processQueue, queue, root)
     root.mainloop()
-    
+
 bleThread = Thread(target=bluetoothThread, args=(queue, ))
 bleThread.start()
 setupRoot(2)
