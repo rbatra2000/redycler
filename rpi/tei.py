@@ -6,6 +6,14 @@ from threading import Thread
 import sys
 import os
 
+# Constants
+MY_UUID = "00001101-0000-1000-8000-00805F9B34FB"
+IMAGES = {
+    1: "/home/pi/Desktop/redycler/rpi/assets/1.png"
+    2: "/home/pi/Desktop/redycler/rpi/assets/2.png"
+    3: "/home/pi/Desktop/redycler/rpi/assets/3.png"
+}
+
 # Starting code to connect to Android
 host = ""
 port = bluetooth.PORT_ANY # RPi Port 1 = BLE
@@ -22,34 +30,22 @@ except:
 
 server.listen(1) # One connection at a time
 
-custom_uuid = "00001101-0000-1000-8000-00805F9B34FB"
-print("Server UUID:", custom_uuid)
-bluetooth.advertise_service(server, "RedyclerService", custom_uuid)
+print("Server UUID:", MY_UUID)
+bluetooth.advertise_service(server, "RedyclerService", MY_UUID)
 
 # Server accepts the client requests and assigns a MAC address
 client, address = server.accept()
 print("Connected To", address)
 print("Client:", client)
 
+# Create a thread to receive Bluetooth messages and put it on the queue
 def bluetoothThread(q):
     try:
         while True:
             # Receiving data
             data = client.recv(1024) # 1024 is buffer size
-#             print(data)
             selection = int.from_bytes(data, "little")
             q.append(selection)
-#             print(selection)
-#             if selection == 1:
-#                 pilImage = Image.open("1.jpeg")
-#                 showPIL(pilImage)
-#                 q.put(1)
-#             elif selection == 2:
-#                 pilImage = Image.open("2.png")
-#                 showPIL(pilImage)
-#             else:
-#                 pilImage = Image.open("3.jpeg")
-#                 showPIL(pilImage)
     except:
         # Close the client and server connection
         q.put(0)
@@ -59,17 +55,14 @@ def bluetoothThread(q):
 # Select correct image
 def getPilImage(selection):
     pilImage = None
-    if selection == 1:
-        pilImage = Image.open(os.path.abspath("/home/pi/Desktop/redycler/rpi/assets/1.jpeg"))
-    elif selection == 2:
-        pilImage = Image.open(os.path.abspath("/home/pi/Desktop/redycler/rpi/assets/2.png"))
-    elif selection == 3:
-        pilImage = Image.open(os.path.abspath("/home/pi/Desktop/redycler/rpi/assets/3.jpeg"))
+    if selection in IMAGES:
+        pilImage = Image.open(os.path.abspath(IMAGES[selection]))
     return pilImage
 
-
+# Queue to communicate between threads
 queue = []
 
+# Callback function and process first item in queue
 def processQueue(q, root):
     print("Checking Queue...")
     if not q:
@@ -87,7 +80,6 @@ def processQueue(q, root):
 def setupRoot(selection):
     pilImage = getPilImage(selection)
     if not pilImage:
-        # TODO: there is an error here
         sys.exit("ERROR")
     root = tk.Tk()
     w, h = root.winfo_screenwidth(), root.winfo_screenheight()
