@@ -4,6 +4,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from threading import Thread
 import sys
+import os
 
 # Starting code to connect to Android
 host = ""
@@ -59,11 +60,11 @@ def bluetoothThread(q):
 def getPilImage(selection):
     pilImage = None
     if selection == 1:
-        pilImage = Image.open("assets/1.jpeg")
+        pilImage = Image.open(os.path.abspath("/home/pi/Desktop/redycler/rpi/assets/1.jpeg"))
     elif selection == 2:
-        pilImage = Image.open("assets/2.png")
+        pilImage = Image.open(os.path.abspath("/home/pi/Desktop/redycler/rpi/assets/2.png"))
     elif selection == 3:
-        pilImage = Image.open("assets/3.jpeg")
+        pilImage = Image.open(os.path.abspath("/home/pi/Desktop/redycler/rpi/assets/1.jpeg"))
     return pilImage
     
 
