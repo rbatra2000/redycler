@@ -11,10 +11,11 @@
     <string name="previous">Previous</string>
     <string name="connect">Connect to device</string>
     <string name="option_1">Option 1</string>
-    <string name="option_2">Option 2</string>
-    <string name="option_3">Option 3</string>
 
     <!-- Strings used for text views -->
-    <string name="hello_redycler">Welcome to Redycler! Please select which pattern you would like to display.</string>
+    <string name="hello_redycler">Welcome to Redycler!</string>
+    <string name="details">Please select which pattern you would like to display.</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="option_2">Option 2</string>
+    <string name="option_3">Option 3</string>
 </resources>
